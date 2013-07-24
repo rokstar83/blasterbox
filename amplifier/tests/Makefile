@@ -7,11 +7,12 @@ vpath %.cc ${SRC_DIR}
 vpath %.hh ${SRC_DIR}
 vpath %.o ${BIN_DIR}
 
-SRC_FILES=main.cc 
+SRC_FILES=main.cc RemoteListenerTests.cc ../../src/RemoteListener.cc MockCommandQueue.cc \
+					MockRemoteClient.cc StdOutLogger.cc FileLogger.cc ../../src/RemoteListenerException.cc
 #RemoteListenerTests.cc ../../src/RemoteSocket.cc ../../src/RemoteListener.cc \
 #../../src/RemoteSocketException.cc MockCommandQueue.cc MockRemoteClient.cc \
 #StdOutLogger.cc FileLogger.cc
-#HDR_FILES=RemoteListenerTests.hh MockCommandQueue.hh MockRemoteClient.hh StdOutLogger.hh FileLogger.hh
+HDR_FILES=RemoteListenerTests.hh MockCommandQueue.hh MockRemoteClient.hh StdOutLogger.hh FileLogger.hh
 OBJS=$(patsubst %.cc, $(BIN_DIR)%.o, $(SRC_FILES))
 LDLIBS=
 LDFLAGS=-lcppunit
@@ -24,11 +25,11 @@ TAGS: $(SRC_FILES) $(HDR_FILES)
 	etags --members --declarations -l c++ $<
 
 blasterboxServerTests: $(OBJS)
-	$(CXX) $(OPTS) -o $(BIN_DIR)blasterboxServerTests $(OBJS) $(LDFLAGS)
+	$(CXX) $(OPTS) -o $(BIN_DIR)blasterboxAmplifierTests $(OBJS) $(LDFLAGS)
 
 $(BIN_DIR)%.o: %.cc
 	echo $<
 	$(CXX) $(OPTS) -c $< -o $@ $(LDFLAGS)
 
 clean:
-	rm $(BIN_DIR)/*.o $(BIN_DIR)/blasterboxServerTests
+	rm $(BIN_DIR)/*.o $(BIN_DIR)/blasterboxAmplifierTests

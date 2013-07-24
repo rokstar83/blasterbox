@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+
+*~
+.gitignore
+amplifier/bin
+amplifier/TAGS
+amplifier/tests/bin
+amplifier/tests/TAGS
