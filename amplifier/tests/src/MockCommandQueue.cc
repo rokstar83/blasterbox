@@ -20,8 +20,17 @@ namespace BlasterBox {
 	 {
 	 }
 
+	 void MockCommandQueue::parseCommand(std::vector<unsigned char> cmdData) 
+	 {
+	 }
+
 	 void MockCommandQueue::pushCommand(RemoteCommand & cmd)
 	 {
+	 }
+
+	 RemoteCommand & MockCommandQueue::topCommand()
+	 {
+			
 	 }
 
 	 RemoteCommand & MockCommandQueue::popCommand()

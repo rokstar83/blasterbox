@@ -80,7 +80,8 @@ namespace BlasterBox {
 						}												
 						
 						std::for_each(_remoteSocks.begin(), _remoteSocks.end(), 
-													[&] (int fd) { if(FD_ISSET(fd, &fds)) readSocket(fd); });						
+													[&] (SocketData sd) { 
+														 if(FD_ISSET(sd.first, &fds)) readSocket(sd); });
 				 }
 			}
 	 }
@@ -150,7 +151,7 @@ namespace BlasterBox {
 				 close(conn);
 			}
 
-			_remoteSocks.push_back(conn);
+			_remoteSocks.push_back(SocketData(conn,vector<unsigned char>()));
 	 }
 
 	 void RemoteListener::buildFDs(fd_set & fds)
@@ -158,18 +159,26 @@ namespace BlasterBox {
 			FD_ZERO(&fds);
 			FD_SET(_listenSock, &fds);
 			std::for_each(_remoteSocks.begin(), _remoteSocks.end(), 
-										[&] (int fd) { FD_SET(fd, &fds); });
+										[&] (SocketData sd) { FD_SET(sd.first, &fds); });
 	 }
 	 
-	 void RemoteListener::readSocket(int fd)
+	 void RemoteListener::readSocket(SocketData & sd)
 	 {
 			unsigned char buf[BUF_LEN];
 			int len = read(fd, buf, BUF_LEN);
 			if(len < 0) { 
 				 throw RemoteListenerException("Error while reading from socket."
 																			 "Error number is : " + std::to_string(errno));
-			}
-			
+			} else if(len > 0) {
+				 for(int x = 0; x < len; ++x) {
+						sd.second.push_back(buf[x]);
+				 }
+				 processSocketBuffer(sd.second);
+			}			
+	 }
+
+	 void RemoteListener::processSocketBuffer(std::vector<unsigned char> & buf)
+	 {
 			
 	 }
 	 

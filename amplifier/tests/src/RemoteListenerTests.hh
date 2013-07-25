@@ -32,8 +32,7 @@ namespace BlasterBox {
 			void tearDown();
 			
 			void testConn();
-			void testMultiConn();
-			void testHUP();
+			void testProcessSocketBuffer(std::vector<unsigned char> & buf);
 	 };
 
 	 CPPUNIT_TEST_SUITE_REGISTRATION(RemoteListenerTests);

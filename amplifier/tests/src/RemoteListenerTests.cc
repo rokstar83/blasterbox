@@ -64,60 +64,52 @@ namespace BlasterBox {
 			}
 	 }
 
-	 void RemoteListenerTests::testMultiConn()
-	 {}
-/*			MockCommandQueue mockQueue;
-			StdOutLogger logger;
-			RemoteListener listener(mockQueue, logger);
-								
-			std::thread listenerThread(&RemoteListener::listenLoop, 
-																 std::ref(listener));
-			thread_guard g(listenerThread, listener);
-			
-			while(!listener.isInitialized()) {}
-*/
-//			std::vector<MockRemoteClient> clients(MAX_REMOTE_CONNECTIONS);
-
-//			for(int x = 0; x < MAX_REMOTE_CONNECTIONS - 1; ++x) {
-//			MockRemoteClient cli;
-//			CPPUNIT_ASSERT_NO_THROW(cli.connect());
-//			CPPUNIT_ASSERT(listener.hasConnections());
-//			CPPUNIT_ASSERT(listener.numConnections() == 1);
-//			}
-//	 }
-
-/*			std::vector<unsigned char> msg(REMOTE_COMMAND_PREFIX_LEN + 
-																		 sizeof(CommandType) + sizeof(SimpleCommand));
-
-			for(int x = 0; x < REMOTE_COMMAND_PREFIX_LEN; ++x) {
-				 msg[x] = REMOTE_COMMAND_PREFIX[x];
-			}
-
-			msg[REMOTE_COMMAND_PREFIX_LEN + 1] = (unsigned char)CommandType::SIMPLE;
-			msg[REMOTE_COMMAND_PREFIX_LEN + 2] = (unsigned char)SimpleCommand::NOOP;
-
-			CPPUNIT_ASSERT_NO_THROW(client1.send(msg.data(), msg.size()));
-
-			int rc;
-			unsigned char * msg = new
-			CPPUNIT_ASSERT_NO_THROW(client1.recv(msg,));
-			} */
-
-
-
-/*	 void RemoteListenerTests::testHUP()
+	 void RemoteListenerTests::testProcessSocketBuffer(std::vector<unsigned char> & buf) 
 	 {
 			MockCommandQueue mockQueue;
 			StdOutLogger logger;
 			RemoteListener listener(mockQueue, logger);
-			MockRemoteClient client;
+			std::string str = "HELLO, WORLD";
 
-			std::shared_future<void> initialized = listener.initialized();
+			std::vector<unsigned char> buffer;
 
-			std::thread listenerThread(&RemoteListener::listenLoop, std::ref(listener));
-			thread_guard g(listenerThread);
+			for_each(str.begin(), str.end(), [] (char c) {
+						buffer.push_back((unsigned char)c);
+				 });
+
+			/* First test incomplete dataset remains unchanged */
+			listener.processSocketBuffer(buffer);
 			
-			initialized.get();
-			client.connect(); 
-			} */
+			for(int x = 0; x < str.size(); ++x) {
+				 CPPUNIT_ASSERT(buffer[x] == str[x]);
+			}
+
+			/* Now test a complete message being processed */
+			buffer.push_back(MSG_TERM);
+			listener.processSocketBuffer(buffer);
+			
+			/* Buffer should be empty */
+			CPPUNIT_ASSERT(buffer.size() == 0);
+
+			/* the command queue should have one command with a message */
+			CPPUNIT_ASSERT(mockCommandQueue.numCommands() == 1);
+			CPPUNIT_ASSERT(mockCommandQueue.top().to_string() == str);
+
+			/* Now tests a complete message being processed with extra data */
+			str = "HELLO, WORLD\0HELLO";
+			for_each(str.begin(), str.end(), [] (char c) {
+						buffer.push_back((unsigned char)c);
+				 });
+			listener.processSocketBuffer(buffer);
+
+			/* the buffer should have whats after the first message */
+			str = "HELLO";
+			for(int x = 0; x < str.size(); ++x) {
+				 CPPUNIT_ASSERT(buffer[x] == str[x]);
+			}
+			
+			str = "HELLO, WORLD";
+			CPPUNIT_ASSERT(mockCommandQueue.numCommands() == 1);
+			CPPUNIT_ASSERT(mockCommandQueue.top().to_string() == str);
+	 }
 }

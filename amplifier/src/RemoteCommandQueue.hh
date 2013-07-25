@@ -21,8 +21,10 @@ namespace BlasterBox {
 
 	 class RemoteCommandQueue 
 	 {
-	 public:			
+	 public:
+			virtual void parseCommand(std::vector<unsigned char> cmdData) = 0;
 			virtual void pushCommand(RemoteCommand & cmd) = 0;
+			virtual RemoteCommand & topCommand() = 0;
 			virtual RemoteCommand & popCommand() = 0;
 			virtual bool hasCommands() = 0;
 			virtual unsigned int numCommands() = 0;

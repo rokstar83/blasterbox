@@ -19,6 +19,8 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <list>
+#include <vector>
+#include <utility>
 
 struct hostent;
 
@@ -45,7 +47,8 @@ namespace BlasterBox {
 			void initialize();
 			void processNewConnection();
 			void buildFDs(fd_set & fds);
-			void readSocket(int fd);
+			void readSocket(SocketData & sd);
+			void processSocketBuffer(std::vector<unsigned char> & buf);
 			void makeNonBlocking(int fd) const;
 
 			RemoteCommandQueue & _cmdQueue;
@@ -57,7 +60,8 @@ namespace BlasterBox {
 			::hostent * _hostInfo;
 			struct sockaddr_in _socketInfo;
 
-			std::list<int> _remoteSocks;
+			typedef std::pair<int, std::vector<unsigned char>> SocketData;
+			std::list<SocketData> _remoteSocks;
 			bool _initialized;
 			bool _listening;
 	 };
