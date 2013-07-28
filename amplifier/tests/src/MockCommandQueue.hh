@@ -25,14 +25,14 @@ namespace BlasterBox {
 	 public:
 			MockCommandQueue();
 			virtual void parseCommand(std::vector<unsigned char> cmdData);
-			virtual void pushCommand(RemoteCommand &);
-			virtual RemoteCommand & topCommand();
-			virtual RemoteCommand & popCommand();
+			virtual void push(RemoteCommand *);
+			virtual RemoteCommand * top();
+			virtual RemoteCommand * pop();
 			virtual bool hasCommands();
-			virtual unsigned int numCommands();
+			virtual unsigned int size();
 
 	 private:
-			std::queue<RemoteCommand &> _cmdQueue;
+			std::queue<RemoteCommand *> _cmdQueue;
 	 };
 }
 

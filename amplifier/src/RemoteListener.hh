@@ -27,9 +27,14 @@ struct hostent;
 namespace BlasterBox {
 	 class RemoteCommandQueue;
 	 class Logger;
+
+#ifdef UNIT_TESTING
+	 class RemoteListenerTests;
+#endif//UNIT_TESTING
 	 
 	 class RemoteListener 
 	 {
+			typedef std::pair<int, std::vector<unsigned char>> SocketData;
 	 public:
 			RemoteListener(RemoteCommandQueue & cmdQueue, Logger & logger, 
 										 unsigned int port = DEFAULT_LISTEN_PORT);
@@ -60,10 +65,14 @@ namespace BlasterBox {
 			::hostent * _hostInfo;
 			struct sockaddr_in _socketInfo;
 
-			typedef std::pair<int, std::vector<unsigned char>> SocketData;
 			std::list<SocketData> _remoteSocks;
 			bool _initialized;
 			bool _listening;
+
+#ifdef UNIT_TESTING			
+			friend class RemoteListenerTests;
+#endif//UNIT_TESTING
+
 	 };
 }
 

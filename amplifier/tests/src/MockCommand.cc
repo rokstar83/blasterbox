@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* MockCommandQueue.cc for BlasterBox Server Tests                           */
+/* MockCommand.cc for BlasterBox Amplifier                                   */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -13,51 +13,19 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
-#include "MockCommandQueue.hh"
 #include "MockCommand.hh"
+#include <algorithm>
 
 namespace BlasterBox {
-	 MockCommandQueue::MockCommandQueue()
-	 {
+	 MockCommand::MockCommand(std::vector<unsigned char> cmdData) {
+			_cmdData = cmdData;
 	 }
 
-	 void MockCommandQueue::parseCommand(std::vector<unsigned char> cmdData) 
-	 {	
-			MockCommand * newCmd = new MockCommand(cmdData);
-			push(newCmd);
-	 }
-
-	 void MockCommandQueue::push(RemoteCommand * cmd)
+	 std::string MockCommand::to_string()
 	 {
-			_cmdQueue.push(cmd);
-	 }
-
-	 RemoteCommand * MockCommandQueue::top()
-	 {
-			if(!hasCommands())
-				 return NULL;
-			
-			RemoteCommand * retval = _cmdQueue.front();
+			std::string retval;
+			std::for_each(_cmdData.begin(), _cmdData.end(), [&] (unsigned char c) {
+						retval += c; });
 			return retval;
-	 }
-
-	 RemoteCommand * MockCommandQueue::pop()
-	 {
-			if(!hasCommands())
-				 return NULL;
-
-			RemoteCommand * retval = _cmdQueue.front();
-			_cmdQueue.pop();
-			return retval;
-	 }
-
-	 bool MockCommandQueue::hasCommands()
-	 {
-			return _cmdQueue.size() == 0 ? false : true;
-	 }
-
-	 unsigned int MockCommandQueue::size()
-	 {
-			return _cmdQueue.size();
 	 }
 }

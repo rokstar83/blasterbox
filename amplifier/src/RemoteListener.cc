@@ -15,7 +15,7 @@
 /*****************************************************************************/
 #include "RemoteListener.hh"
 #include "RemoteListenerException.hh"
-#include "RemoteCommandList.hh"
+#include "RemoteCommandQueue.hh"
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
@@ -151,7 +151,7 @@ namespace BlasterBox {
 				 close(conn);
 			}
 
-			_remoteSocks.push_back(SocketData(conn,vector<unsigned char>()));
+			_remoteSocks.push_back(SocketData(conn,std::vector<unsigned char>()));
 	 }
 
 	 void RemoteListener::buildFDs(fd_set & fds)
@@ -165,7 +165,7 @@ namespace BlasterBox {
 	 void RemoteListener::readSocket(SocketData & sd)
 	 {
 			unsigned char buf[BUF_LEN];
-			int len = read(fd, buf, BUF_LEN);
+			int len = read(sd.first, buf, BUF_LEN);
 			if(len < 0) { 
 				 throw RemoteListenerException("Error while reading from socket."
 																			 "Error number is : " + std::to_string(errno));
@@ -179,7 +179,14 @@ namespace BlasterBox {
 
 	 void RemoteListener::processSocketBuffer(std::vector<unsigned char> & buf)
 	 {
+			auto it = std::find(buf.begin(), buf.end(), '\0');
+
+			if(it == buf.end())
+				 return;
 			
+			_cmdQueue.parseCommand(std::move(std::vector<unsigned char>(buf.begin(), it)));
+			buf = std::vector<unsigned char>(it+1, buf.end());
+			processSocketBuffer(buf);
 	 }
 	 
 	 void RemoteListener::makeNonBlocking(int fd) const

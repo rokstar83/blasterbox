@@ -14,14 +14,17 @@
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
 #include "RemoteListenerTests.hh"
-#include "../../src/RemoteListener.hh"
 #include "MockCommandQueue.hh"
 #include "MockRemoteClient.hh"
 #include "StdOutLogger.hh"
 #include "FileLogger.hh"
+#include "MockCommand.hh"
 #include "../../src/RemoteCommandList.hh"
+#include "../../src/RemoteCommand.hh"
+#include "../../src/RemoteListener.hh"
 #include <thread>
 #include <vector>
+#include <algorithm>
 #include <string>
 
 namespace BlasterBox {
@@ -56,7 +59,7 @@ namespace BlasterBox {
 
 			std::vector<MockRemoteClient> clients(MAX_REMOTE_CONNECTIONS);
 
-			for(int x = 0; x < clients.size(); ++x) {				 
+			for(unsigned int x = 0; x < clients.size(); ++x) {				 
 				 CPPUNIT_ASSERT_NO_THROW(clients[x].connect());
 				 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 				 CPPUNIT_ASSERT(listener.hasConnections());
@@ -64,7 +67,7 @@ namespace BlasterBox {
 			}
 	 }
 
-	 void RemoteListenerTests::testProcessSocketBuffer(std::vector<unsigned char> & buf) 
+	 void RemoteListenerTests::testProcessSocketBuffer() 
 	 {
 			MockCommandQueue mockQueue;
 			StdOutLogger logger;
@@ -73,16 +76,29 @@ namespace BlasterBox {
 
 			std::vector<unsigned char> buffer;
 
-			for_each(str.begin(), str.end(), [] (char c) {
+			std::for_each(str.begin(), str.end(), [&] (char c) {
 						buffer.push_back((unsigned char)c);
 				 });
 
 			/* First test incomplete dataset remains unchanged */
 			listener.processSocketBuffer(buffer);
 			
-			for(int x = 0; x < str.size(); ++x) {
+			for(unsigned int x = 0; x < str.size(); ++x) {
 				 CPPUNIT_ASSERT(buffer[x] == str[x]);
 			}
+
+      /* Lets give a couple of weird cases a go */
+			/* Blank buffer */
+			std::vector<unsigned char> buffer2;
+			listener.processSocketBuffer(buffer2);
+			
+			/* A buffer with just a MSG_TERM */
+			buffer2.push_back(MSG_TERM);
+			listener.processSocketBuffer(buffer2);
+			CPPUNIT_ASSERT(buffer2.size() == 0);
+			CPPUNIT_ASSERT(mockQueue.size() == 1);
+			CPPUNIT_ASSERT(mockQueue.top()->to_string() == "");
+			delete mockQueue.pop();
 
 			/* Now test a complete message being processed */
 			buffer.push_back(MSG_TERM);
@@ -92,24 +108,24 @@ namespace BlasterBox {
 			CPPUNIT_ASSERT(buffer.size() == 0);
 
 			/* the command queue should have one command with a message */
-			CPPUNIT_ASSERT(mockCommandQueue.numCommands() == 1);
-			CPPUNIT_ASSERT(mockCommandQueue.top().to_string() == str);
+			CPPUNIT_ASSERT(mockQueue.size() == 1);
+			CPPUNIT_ASSERT(mockQueue.top()->to_string() == str);
 
 			/* Now tests a complete message being processed with extra data */
-			str = "HELLO, WORLD\0HELLO";
-			for_each(str.begin(), str.end(), [] (char c) {
+			str = std::string("HELLO, WORLD") + std::to_string(MSG_TERM) + std::string("HELLO");
+			for_each(str.begin(), str.end(), [&] (char c) {
 						buffer.push_back((unsigned char)c);
 				 });
 			listener.processSocketBuffer(buffer);
 
 			/* the buffer should have whats after the first message */
 			str = "HELLO";
-			for(int x = 0; x < str.size(); ++x) {
+			for(unsigned int x = 0; x < str.size(); ++x) {
 				 CPPUNIT_ASSERT(buffer[x] == str[x]);
 			}
 			
 			str = "HELLO, WORLD";
-			CPPUNIT_ASSERT(mockCommandQueue.numCommands() == 1);
-			CPPUNIT_ASSERT(mockCommandQueue.top().to_string() == str);
+			CPPUNIT_ASSERT(mockQueue.size() == 1);
+			CPPUNIT_ASSERT(mockQueue.top()->to_string() == str);
 	 }
 }

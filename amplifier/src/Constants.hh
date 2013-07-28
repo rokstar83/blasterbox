@@ -23,6 +23,7 @@ namespace BlasterBox {
 	 const int DEFAULT_TIMEOUT_SEC = 1;
 	 const int DEFAULT_TIMEOUT_USEC = 0;
 	 const int BUF_LEN = 50;
+	 const unsigned char MSG_TERM = '\0';
 }
 
 #endif /* CONSTANTS_HH_ */

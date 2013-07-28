@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* RemoteCommand.hh                                                          */
+/* RemoteCommand.hh for BlasterBox Amplifier                                 */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -15,9 +15,13 @@
 /*****************************************************************************/
 #ifndef REMOTECOMMAND_HH_
 #define REMOTECOMMAND_HH_
+#include <string>
 
 namespace BlasterBox {
-	 class Remotecommand {};
+	 class RemoteCommand {
+	 public:
+			virtual std::string to_string() = 0; 
+	 };
 }
 
 #endif /* REMOTECOMMAND_HH_ */
