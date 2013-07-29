@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* MockCommandQueue.cc for BlasterBox Server Tests                           */
+/* MockCommandQueue.cc for BlasterBox Amplifier tests                        */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -21,43 +21,9 @@ namespace BlasterBox {
 	 {
 	 }
 
-	 void MockCommandQueue::parseCommand(std::vector<unsigned char> cmdData) 
+	 void MockCommandQueue::parseCommand(const std::vector<unsigned char> & cmdData)
 	 {	
 			MockCommand * newCmd = new MockCommand(cmdData);
 			push(newCmd);
-	 }
-
-	 void MockCommandQueue::push(RemoteCommand * cmd)
-	 {
-			_cmdQueue.push(cmd);
-	 }
-
-	 RemoteCommand * MockCommandQueue::top()
-	 {
-			if(!hasCommands())
-				 return NULL;
-			
-			RemoteCommand * retval = _cmdQueue.front();
-			return retval;
-	 }
-
-	 RemoteCommand * MockCommandQueue::pop()
-	 {
-			if(!hasCommands())
-				 return NULL;
-
-			RemoteCommand * retval = _cmdQueue.front();
-			_cmdQueue.pop();
-			return retval;
-	 }
-
-	 bool MockCommandQueue::hasCommands()
-	 {
-			return _cmdQueue.size() == 0 ? false : true;
-	 }
-
-	 unsigned int MockCommandQueue::size()
-	 {
-			return _cmdQueue.size();
 	 }
 }

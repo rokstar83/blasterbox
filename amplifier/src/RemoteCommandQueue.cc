@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* RemoteCommandQueue.hh                                                     */
+/* MockCommandQueue.cc for BlasterBox Amplifier                              */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -13,34 +13,56 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
-#ifndef REMOTECOMMANDQUEUE_HH_
-#define REMOTECOMMANDQUEUE_HH_
-
-#include <vector>
-#include <queue>
-#include <mutex>
+#include "RemoteCommandQueue.hh"
+#include "RemoteCommand.hh"
 
 namespace BlasterBox {
-	 class RemoteCommand;
 
-	 class RemoteCommandQueue
+	 RemoteCommandQueue::RemoteCommandQueue()
 	 {
-	 public:
-			RemoteCommandQueue();
-			~RemoteCommandQueue();
+	 }
 
-			virtual void parseCommand(const std::vector<unsigned char> & cmdData);
-			virtual void push(RemoteCommand *);
-			virtual RemoteCommand * pop();
-			virtual bool hasCommands() const;
-			virtual unsigned int size() const;
+	 RemoteCommandQueue::~RemoteCommandQueue()
+	 {
+			flushCommands();
+	 }
 
-	 private:
-			void flushCommands();
+	 void RemoteCommandQueue::parseCommand(const std::vector<unsigned char> & cmdData)
+	 {
+			throw -1;
+	 }
 
-			std::queue<RemoteCommand *> _cmdQueue;
-			std::mutex _mux;
-	 };
+	 void RemoteCommandQueue::push(RemoteCommand * cmd)
+	 {
+			_cmdQueue.push(cmd);
+	 }
+
+	 RemoteCommand * RemoteCommandQueue::pop()
+	 {
+			if(!hasCommands())
+				 return NULL;
+
+			RemoteCommand * retval = _cmdQueue.front();
+			_cmdQueue.pop();
+			return retval;
+	 }
+
+	 bool RemoteCommandQueue::hasCommands() const
+	 {
+			return _cmdQueue.size() == 0 ? false : true;
+	 }
+
+	 unsigned int RemoteCommandQueue::size() const
+	 {
+			return _cmdQueue.size();
+	 }
+
+	 void RemoteCommandQueue::flushCommands() 
+	 {
+			while(hasCommands()) {
+				 RemoteCommand * cmd = pop();
+				 if(cmd != NULL)
+						delete cmd;
+			}
+	 }
 }
-
-#endif /* REMOTECOMMANDQUEUE_HH_ */

@@ -97,8 +97,9 @@ namespace BlasterBox {
 			listener.processSocketBuffer(buffer2);
 			CPPUNIT_ASSERT(buffer2.size() == 0);
 			CPPUNIT_ASSERT(mockQueue.size() == 1);
-			CPPUNIT_ASSERT(mockQueue.top()->to_string() == "");
-			delete mockQueue.pop();
+			RemoteCommand * cmd = mockQueue.pop();
+			CPPUNIT_ASSERT(cmd->to_string() == "");
+			delete cmd;
 
 			/* Now test a complete message being processed */
 			buffer.push_back(MSG_TERM);
@@ -109,13 +110,21 @@ namespace BlasterBox {
 
 			/* the command queue should have one command with a message */
 			CPPUNIT_ASSERT(mockQueue.size() == 1);
-			CPPUNIT_ASSERT(mockQueue.top()->to_string() == str);
+			cmd = mockQueue.pop();
+			CPPUNIT_ASSERT(cmd->to_string() == str);
+			delete cmd;
 
 			/* Now tests a complete message being processed with extra data */
-			str = std::string("HELLO, WORLD") + std::to_string(MSG_TERM) + std::string("HELLO");
-			for_each(str.begin(), str.end(), [&] (char c) {
+			str = std::string("HELLO, WORLD");
+			for_each(str.begin(), str.end(), [&] (unsigned char c) {
 						buffer.push_back((unsigned char)c);
 				 });
+			buffer.push_back('\0');
+			str = "HELLO";
+			for_each(str.begin(), str.end(), [&] (unsigned char c) {
+						buffer.push_back((unsigned char)c);
+				 });
+
 			listener.processSocketBuffer(buffer);
 
 			/* the buffer should have whats after the first message */
@@ -126,6 +135,7 @@ namespace BlasterBox {
 			
 			str = "HELLO, WORLD";
 			CPPUNIT_ASSERT(mockQueue.size() == 1);
-			CPPUNIT_ASSERT(mockQueue.top()->to_string() == str);
+			cmd = mockQueue.pop();
+			CPPUNIT_ASSERT(cmd->to_string() == str);
 	 }
 }

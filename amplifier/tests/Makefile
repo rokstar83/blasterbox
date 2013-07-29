@@ -9,12 +9,12 @@ vpath %.o ${BIN_DIR}
 
 SRC_FILES=main.cc RemoteListenerTests.cc ../../src/RemoteListener.cc MockCommandQueue.cc \
 					MockRemoteClient.cc StdOutLogger.cc FileLogger.cc ../../src/RemoteListenerException.cc \
-					MockCommand.cc
+					MockCommand.cc ../../src/RemoteCommandQueue.cc
 #RemoteListenerTests.cc ../../src/RemoteSocket.cc ../../src/RemoteListener.cc \
 #../../src/RemoteSocketException.cc MockCommandQueue.cc MockRemoteClient.cc \
 #StdOutLogger.cc FileLogger.cc
 HDR_FILES=RemoteListenerTests.hh MockCommandQueue.hh MockRemoteClient.hh StdOutLogger.hh FileLogger.hh \
-					../../src/RemoteCommand.hh MockCommand.hh
+					../../src/RemoteCommand.hh MockCommand.hh ../../src/RemoteCommandQueue.hh
 OBJS=$(patsubst %.cc, $(BIN_DIR)%.o, $(SRC_FILES))
 LDLIBS=
 LDFLAGS=-lcppunit
