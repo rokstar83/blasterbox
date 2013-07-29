@@ -16,11 +16,24 @@
 #ifndef REMOTECOMMAND_HH_
 #define REMOTECOMMAND_HH_
 #include <string>
+#include <vector>
 
 namespace BlasterBox {
+	 enum class CommandType {PLAY,
+				 PAUSE,
+				 NEXT,
+				 FF,
+				 REW,};
+
 	 class RemoteCommand {
 	 public:
+			RemoteCommand(CommandType type);
+			RemoteCommand(CommandType type, std::vector<unsigned char> data);
+			
 			virtual std::string to_string() = 0; 
+	 private:
+			CommandType _type;
+			std::vector<unsigned char> _data;
 	 };
 }
 
