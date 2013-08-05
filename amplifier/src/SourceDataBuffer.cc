@@ -91,6 +91,16 @@ namespace BlasterBox {
 			return *this;
 	 }
 
+	 bool SourceDataIterator::operator==(const SourceDataIterator & lhs) const
+	 {
+			return ((&_buf) == &(lhs._buf)) && (_pos == lhs._pos);
+	 }
+
+	 bool SourceDataIterator::operator!=(const SourceDataIterator & lhs) const
+	 {
+			return !(*this == lhs);
+	 }
+
 	 SourceDataIterator & SourceDataIterator::operator++() 
 	 {				
 			pos = pos->getNext();
