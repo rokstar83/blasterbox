@@ -45,12 +45,14 @@ namespace BlasterBox {
 	 public:
 			SourceDataBuffer(int bufferSize = MAX_SOURCE_BUFFER_SIZE);
 
+			SourceDataIterator begin() const;
+			SourceDataIterator end() const;
 
 			friend class SourceDataIterator;
 	 private:
 			int _bufferSize;
-			SourceDataNode * begin;
-			SourceDataNode * end;
+			SourceDataNode * _begin;
+			SourceDataNode * _end;
 	 };
 
 	 class SourceDataIterator {
@@ -59,10 +61,11 @@ namespace BlasterBox {
 			SourceDataIterator(const SourceDataIterator & a);
 			
 			SourceDataIterator & operator=(const SourceDataIterator & lhs);
+			bool operator==(const SourceDataIterator & lhs) const;
+			bool operator!=(const SourceDataIterator & lhs) const;
 			SourceDataIterator & operator++();
-			std::pair<std::chrono::miliseconds, std::vector<unsigned char>> operator*();
+			SourceDataNode & operator*();
 			
-
 	 private:
 			SourceDataBuffer & _buf;
 			SourceDataNode * pos;
