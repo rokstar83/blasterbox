@@ -16,6 +16,8 @@
 #include "RemoteListenerException.hh"
 
 namespace BlasterBox {
-	 RemoteListenerException::RemoteListenerException(const std::string & msg)
-			: std::runtime_error(msg) {}
+
+	 RemoteListenerException::RemoteListenerException(const std::string & msg) : 
+			std::runtime_error(msg) {}
+
 }
