@@ -73,7 +73,8 @@ namespace BlasterBox {
 				 int readable = select(FD_SETSIZE, &fds, nullptr, nullptr, &timeout);
 				 if(readable < 0) {
 						throw RemoteListenerException("Error on selecting fds. "
-																					"Error number is: " + std::to_string(errno));
+																					"Error number is: " + 
+																					std::to_string(errno));
 				 }else if(readable > 0) {
 						if(FD_ISSET(_listenSock, &fds)) {
 							 processNewConnection();							 
@@ -118,18 +119,22 @@ namespace BlasterBox {
 			if((_listenSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 			{
 				 throw RemoteListenerException("Unable to acquire socket"
-																			 "Error is : " + std::to_string(errno) + "\n");
+																			 "Error is : " + std::to_string(errno) +
+																			 "\n");
 			}
 
 			int optval = 1;
-			::setsockopt(_listenSock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));			
+			::setsockopt(_listenSock, SOL_SOCKET, SO_REUSEADDR, &optval, 
+									 sizeof(optval));			
 
 			makeNonBlocking(_listenSock);
 
 			/* Lets open up us a socket */
-			if(::bind(_listenSock, (struct sockaddr *)&_socketInfo, sizeof(struct sockaddr_in)) < 0) {
-				 throw RemoteListenerException("Unable to bind socket to local address. "
-				                               "Error is : " + std::to_string(errno) + "\n");
+			if(::bind(_listenSock, (struct sockaddr *)&_socketInfo, 
+								sizeof(struct sockaddr_in)) < 0) {
+				 throw RemoteListenerException("Unable to bind socket to local "
+																			 "address. Error is : " + 
+																			 std::to_string(errno) + "\n");
 			}			
 	 }
 
@@ -168,7 +173,8 @@ namespace BlasterBox {
 			int len = read(sd.first, buf, BUF_LEN);
 			if(len < 0) { 
 				 throw RemoteListenerException("Error while reading from socket."
-																			 "Error number is : " + std::to_string(errno));
+																			 "Error number is : " + 
+																			 std::to_string(errno));
 			} else if(len > 0) {
 				 for(int x = 0; x < len; ++x) {
 						sd.second.push_back(buf[x]);
@@ -184,7 +190,8 @@ namespace BlasterBox {
 			if(it == buf.end())
 				 return;
 			
-			_cmdQueue.parseCommand(std::move(std::vector<unsigned char>(buf.begin(), it)));
+			_cmdQueue.parseCommand(std::move(std::vector<unsigned char>(buf.begin(), 
+																																	it)));
 			buf = std::vector<unsigned char>(it+1, buf.end());
 			processSocketBuffer(buf);
 	 }
@@ -194,13 +201,15 @@ namespace BlasterBox {
 			int opts = ::fcntl(fd, F_GETFL);
 			if(opts < 0) {
 				 throw RemoteListenerException("Failed to get file descriptor options."
-																			 "Error number is : " + std::to_string(errno));
+																			 "Error number is : " + 
+																			 std::to_string(errno));
 			}
 
 			opts |= O_NONBLOCK;
 			if(fcntl(fd, F_SETFL, opts) < 0) {
 				 throw RemoteListenerException("Failed to set file descriptor options."
-																			 "Error number is : " + std::to_string(errno));
+																			 "Error number is : " + 
+																			 std::to_string(errno));
 			}
 	 }
 }
