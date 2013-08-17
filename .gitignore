@@ -18,3 +18,5 @@ amplifier/bin
 amplifier/TAGS
 amplifier/tests/bin
 amplifier/tests/TAGS
+/amplifier/src/#*#
+/amplifier/src/.#*

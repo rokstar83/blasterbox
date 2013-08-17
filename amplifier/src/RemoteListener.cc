@@ -126,7 +126,7 @@ namespace BlasterBox {
 
 			makeNonBlocking(_listenSock);
 
-			/* Let open up us a socket */
+			/* Lets open up us a socket */
 			if(::bind(_listenSock, (struct sockaddr *)&_socketInfo, sizeof(struct sockaddr_in)) < 0) {
 				 throw RemoteListenerException("Unable to bind socket to local address. "
 				                               "Error is : " + std::to_string(errno) + "\n");

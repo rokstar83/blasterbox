@@ -23,7 +23,7 @@ LDFLAGS=-lcppunit -lmpg123
 
 .PHONY: all clean tests TAGS
 
-all: blasterboxServerTests tests TAGS
+all: blasterboxServerTests TAGS
 
 TAGS: $(SRC_FILES) $(HDR_FILES)
 	etags --members --declarations -l c++ $<
