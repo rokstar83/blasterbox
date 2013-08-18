@@ -33,7 +33,8 @@ namespace BlasterBox {
 			std::thread & _t;
 			RemoteListener & _r;
 	 public:
-			explicit thread_guard(std::thread & t, RemoteListener & r) : _t(t), _r(r) {}
+			explicit thread_guard(std::thread & t, RemoteListener & r) : 
+				 _t(t), _r(r) {}
 			~thread_guard() {if(_t.joinable()) { _r.stopListening(); _t.join(); } }
 			thread_guard(thread_guard const &)=delete;
 			thread_guard & operator=(thread_guard const &)=delete;

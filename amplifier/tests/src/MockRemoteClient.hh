@@ -19,7 +19,6 @@
 #include <sys/types.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <string>
 #include <stdexcept>
 
 namespace BlasterBox {
