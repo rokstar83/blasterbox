@@ -1,5 +1,5 @@
 CXX=g++
-OPTS=-Wall -O2 -g
+OPTS=-Wall -O2 -g -std=gnu++0x -pthread
 SRC_DIR=src/
 BIN_DIR=bin/
 
@@ -7,8 +7,8 @@ vpath %.cc $(SRC_DIR)
 vpath %.hh $(SRC_DIR)
 vpath %.o $(BIN_DIR)
 
-SRC_FILES=main.cc
-HDR_FILES=
+SRC_FILES=main.cc Amplifier.cc AmplifierException.cc
+HDR_FILES=Amplifier.hh AmplifierException.hh
 OBJS=$(patsubst %.cc, $(BIN_DIR)%.o, $(SRC_FILES))
 LDLIBS=
 LDFLAGS=
