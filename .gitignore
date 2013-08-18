@@ -20,3 +20,7 @@ amplifier/tests/bin
 amplifier/tests/TAGS
 /amplifier/src/#*#
 /amplifier/src/.#*
+/amplifier/tests/Mp3Source/TAGS
+/amplifier/tests/Mp3Source/bin/Mp3SourceTests
+/amplifier/tests/RemoteListener/TAGS
+/amplifier/tests/RemoteListener/bin/RemoteListenerTests

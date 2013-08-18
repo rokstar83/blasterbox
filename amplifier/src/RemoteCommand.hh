@@ -20,7 +20,8 @@
 namespace BlasterBox {
 	 class RemoteCommand {
 	 public:
-			virtual std::string to_string() = 0; 
+			virtual std::string to_string() = 0;
+			virtual ~RemoteCommand();
 	 };
 }
 
