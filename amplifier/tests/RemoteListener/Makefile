@@ -1,16 +1,12 @@
 CXX=g++
 OPTS=-Wall -O0 -g -std=gnu++0x -pthread -DUNIT_TESTING
+
 SRC_DIR=src/
-DATA_DIR=data/
 BIN_DIR=bin/
 TEST_DIR=../../src/
 TEST_BIN_DIR=../../bin/
 MOCK_DIR=../mocks/
 MOCK_BIN_DIR=../mocks/
-
-#vpath %.cc ${SRC_DIR)
-#vpath %.hh ${SRC_DIR)
-#vpath %.o ${BIN_DIR)
 
 SRC_FILES=main.cc RemoteListenerTests.cc 
 TEST_SRC_FILES=RemoteListener.cc RemoteListenerException.cc RemoteCommand.cc \

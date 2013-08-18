@@ -19,7 +19,7 @@
 namespace BlasterBox {
 	 const int DEFAULT_LISTEN_PORT = 9999;
 	 const int MAX_HOST_NAME = 256;
-	 const int MAX_REMOTE_CONNECTIONS = 6;
+	 const unsigned int MAX_REMOTE_CONNECTIONS = 6;
 	 const int DEFAULT_TIMEOUT_SEC = 1;
 	 const int DEFAULT_TIMEOUT_USEC = 0;
 	 const int BUF_LEN = 50;

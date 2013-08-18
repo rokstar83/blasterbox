@@ -3,10 +3,6 @@ OPTS=-Wall -O2 -g -std=gnu++0x -pthread
 SRC_DIR=src/
 BIN_DIR=bin/
 
-vpath %.cc $(SRC_DIR)
-vpath %.hh $(SRC_DIR)
-vpath %.o $(BIN_DIR)
-
 SRC_FILES=main.cc Amplifier.cc AmplifierException.cc
 HDR_FILES=Amplifier.hh AmplifierException.hh
 OBJS=$(patsubst %.cc, $(BIN_DIR)%.o, $(SRC_FILES))
@@ -17,14 +13,14 @@ LDFLAGS=
 
 all: blasterboxAmplifier tests TAGS
 
-TAGS: $(SRC_FILES) $(HDR_FILES)
+TAGS: $(patsubst %, $(SRC_DIR)%, $(SRC_FILES) $(HDR_FILES))
 	etags --members --declarations -l c++ $<
 
 blasterboxAmplifier: $(OBJS)
 	echo $(OBJS)
 	$(CXX) $(OPTS) -o $(BIN_DIR)blasterboxAmplifier $(OBJS) $(LDLIBS)
 
-$(BIN_DIR)%.o: %.cc
+$(BIN_DIR)%.o: $(SRC_DIR)%.cc
 	echo $<
 	$(CXX) $(OPTS) -c $< -o $@ $(LDFLAGS)
 

@@ -24,3 +24,4 @@ amplifier/tests/TAGS
 /amplifier/tests/Mp3Source/bin/Mp3SourceTests
 /amplifier/tests/RemoteListener/TAGS
 /amplifier/tests/RemoteListener/bin/RemoteListenerTests
+/amplifier/tests/Mp3Source/bin/RemoteListenerTests
