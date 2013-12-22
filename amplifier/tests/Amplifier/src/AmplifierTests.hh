@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* main.cc for BlasterBox Amplifier Tests (Mp3Source)                        */
+/* AmplifierTests.hh                                                         */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -13,28 +13,27 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/XmlOutputter.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TestRunner.h>
+#ifndef AMPLIFIERTESTS_HH_
+#define AMPLIFIERTESTS_HH_
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-int main(int argc, char *argv[])
-{
-	 CppUnit::TestResult controller;
+namespace BlasterBox {
+	 class AmplifierTests : public CppUnit::TestFixture
+	 {
+			CPPUNIT_TEST_SUITE(AmplifierTests);
+			CPPUNIT_TEST(checkBadConfFile);
+			CPPUNIT_TEST(checkBadLogFile);
+			CPPUNIT_TEST_SUITE_END();
+	 public:
+			void setup();
+			void tearDown();
 
-	 CppUnit::TestResultCollector result;
-	 controller.addListener(&result);
+			void checkBadConfFile();
+			void checkBadLogFile();
+	 };
 
-	 CppUnit::TestRunner runner;
-	 runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
-	 
-	 try {
-			runner.run(controller);
-			CppUnit::XmlOutputter outputter(&result, std::cout);
-			outputter.write();
-	 } catch(...) {
-	 }
-	 
-	 return (result.wasSuccessful() ? 0 : 1);
+	 CPPUNIT_TEST_SUITE_REGISTRATION(AmplifierTests);
 }
+
+#endif /* AMPLIFIERTESTS_HH_ */

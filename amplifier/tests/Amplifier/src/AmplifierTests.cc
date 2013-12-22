@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* main.cc for BlasterBox Amplifier Tests (Mp3Source)                        */
+/* AmplifierTests.cc                                                         */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -13,28 +13,28 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/XmlOutputter.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TestRunner.h>
+#include "AmplifierTests.hh"
+#include "../../../src/Amplifier.hh"
+#include "../../../src/AmplifierException.hh"
 
-int main(int argc, char *argv[])
-{
-	 CppUnit::TestResult controller;
+namespace BlasterBox {
+	 void AmplifierTests::setup() {}
 
-	 CppUnit::TestResultCollector result;
-	 controller.addListener(&result);
+	 void AmplifierTests::tearDown() {}
 
-	 CppUnit::TestRunner runner;
-	 runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
-	 
-	 try {
-			runner.run(controller);
-			CppUnit::XmlOutputter outputter(&result, std::cout);
-			outputter.write();
-	 } catch(...) {
+	 void AmplifierTests::checkBadConfFile()
+	 {
+			std::string badConfFileLocation = "/path/to/nowhere.conf";
+			std::string logFileLocation = "../data/blasterbox.log";
+			CPPUNIT_ASSERT_THROW(Amplifier(badConfFileLocation, logFileLocation),
+													 AmplifierException);
 	 }
-	 
-	 return (result.wasSuccessful() ? 0 : 1);
+
+	 void AmplifierTests::checkBadLogFile()
+	 {
+			std::string confFileLocation = "../data/blasterbox.conf";
+			std::string badLogFileLocation = "/path/to/nowhere.conf";
+			CPPUNIT_ASSERT_THROW(Amplifier(confFileLocation, badLogFileLocation),
+													 AmplifierException);
+	 }
 }

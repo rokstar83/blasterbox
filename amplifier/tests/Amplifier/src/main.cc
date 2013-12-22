@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* main.cc for BlasterBox Amplifier Tests (Mp3Source)                        */
+/* main.cc for BlasterBox Amplifier Tests (Amplifier)                        */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -14,27 +14,28 @@
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/XmlOutputter.h>
+#include <cppunit/CompilerOutputter.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
 #include <cppunit/TestRunner.h>
+#include "SexpOutputter.hh"
 
 int main(int argc, char *argv[])
 {
-	 CppUnit::TestResult controller;
+   CppUnit::TestResult controller;
 
-	 CppUnit::TestResultCollector result;
-	 controller.addListener(&result);
+   CppUnit::TestResultCollector result;
+   controller.addListener(&result);
 
-	 CppUnit::TestRunner runner;
-	 runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
-	 
-	 try {
-			runner.run(controller);
-			CppUnit::XmlOutputter outputter(&result, std::cout);
-			outputter.write();
-	 } catch(...) {
-	 }
-	 
-	 return (result.wasSuccessful() ? 0 : 1);
+   CppUnit::TestRunner runner;
+   runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
+   
+   try {
+      runner.run(controller);
+      CppUnit::SexpOutputter outputter(&result, std::cout);
+      outputter.write();
+   } catch(...) {
+   }
+   
+   return (result.wasSuccessful() ? 0 : 1);
 }

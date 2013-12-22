@@ -1,6 +1,6 @@
 /*****************************************************************************/ 
-/* main.cc for BlasterBox Amplifier Tests (Mp3Source)                        */
-/* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
+/* SexpOutputter.hh                                                          */
+/* Copyright (c) 2013 Thomas Hartman (rokstar83@gmail.com)                   */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
 /* modify it under the terms of the GNU General Public License               */
@@ -13,28 +13,42 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/XmlOutputter.h>
-#include <cppunit/TestResult.h>
+#ifndef SEXPOUTPUTTER_HH_
+#define SEXPOUTPUTTER_HH_
+
+#include <list>
+#include <cppunit/Outputter.h>
 #include <cppunit/TestResultCollector.h>
-#include <cppunit/TestRunner.h>
+#include <cppunit/portability/Stream.h>
+#include <cppunit/portability/CppUnitMap.h>
+#include <string>
+#include <list>
 
-int main(int argc, char *argv[])
+CPPUNIT_NS_BEGIN
+
+class TestResultCollector;
+
+class CPPUNIT_API SexpOutputter : public Outputter
 {
-	 CppUnit::TestResult controller;
+public:
+SexpOutputter(TestResultCollector * result, OStream &stream);
+virtual ~SexpOutputter();
 
-	 CppUnit::TestResultCollector result;
-	 controller.addListener(&result);
+typedef CppUnitMap<Test *,TestFailure*, std::less<Test*> > FailedTests;
 
-	 CppUnit::TestRunner runner;
-	 runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
-	 
-	 try {
-			runner.run(controller);
-			CppUnit::XmlOutputter outputter(&result, std::cout);
-			outputter.write();
-	 } catch(...) {
-	 }
-	 
-	 return (result.wasSuccessful() ? 0 : 1);
-}
+virtual void write();
+
+private:
+TestResultCollector * _result;
+OStream & _stream;
+
+private:
+/* disable copy and assignment operator */
+SexpOutputter(const SexpOutputter & copy);
+void operator =(const SexpOutputter & copy);
+
+};
+
+CPPUNIT_NS_END
+
+#endif /* SEXPOUTPUTTER_HH_ */

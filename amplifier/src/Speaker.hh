@@ -1,5 +1,5 @@
 /*****************************************************************************/ 
-/* main.cc for BlasterBox Amplifier Tests (Mp3Source)                        */
+/* Speaker.hh                                                                */
 /* Copyright (c) 2013 Tom Hartman (rokstar83@gmail.com)                      */
 /*                                                                           */
 /* This program is free software; you can redistribute it and/or             */
@@ -13,28 +13,18 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*****************************************************************************/
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/XmlOutputter.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TestRunner.h>
+#ifndef SPEAKER_HH_
+#define SPEAKER_HH_
 
-int main(int argc, char *argv[])
+class Speaker 
 {
-	 CppUnit::TestResult controller;
+public:
+	 Speaker(int dacBitRate, int dataSocket, int controlSocket);
 
-	 CppUnit::TestResultCollector result;
-	 controller.addListener(&result);
+private:
+	 int _dacBitRate;
+	 int _dataSocket;
+	 int _controlSocket;
+};
 
-	 CppUnit::TestRunner runner;
-	 runner.addTest(CppUnit::TestFactoryRegistry::getRegistry().makeTest());
-	 
-	 try {
-			runner.run(controller);
-			CppUnit::XmlOutputter outputter(&result, std::cout);
-			outputter.write();
-	 } catch(...) {
-	 }
-	 
-	 return (result.wasSuccessful() ? 0 : 1);
-}
+#endif /* SPEAKER_HH_ */
